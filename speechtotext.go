@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	"google.golang.org/api/option"
@@ -57,7 +56,7 @@ func runAsync(credsPath string) error {
 						Encoding:        speechpb.RecognitionConfig_LINEAR16, // TODO(): paramaterize
 						SampleRateHertz: 16000,
 					},
-					InterimResults: true,
+					InterimResults: false,
 				},
 			},
 		})
@@ -97,10 +96,12 @@ func runAsync(credsPath string) error {
 			fmt.Println(resp)
 		}
 		if resp.Results != nil {
-			fmt.Printf("\r%s\r", strings.Repeat(" ", maxLine))
-			if resp.Results[0].Stability > 0.0 && resp.Results[0].Stability < 0.6 {
-				fmt.Printf("?")
-			}
+			/*
+				fmt.Printf("\r%s\r", strings.Repeat(" ", maxLine))
+				if resp.Results[0].Stability > 0.0 && resp.Results[0].Stability < 0.6 {
+					fmt.Printf("?")
+				}
+			*/
 			transcript := resp.Results[0].Alternatives[0].Transcript
 			if len(transcript)+1 > maxLine {
 				maxLine = len(transcript) + 1

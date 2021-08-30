@@ -1,0 +1,10 @@
+#!/bin/bash -ex
+
+michost=$1
+outfn=$2
+[ -n "$outfn" ]
+[ -n "$SPEECHTOTEXT_KEY" ]
+
+ssh $michost ffmpeg -nostats -f pulse -i alsa_input.pci-0000_00_1b.0.analog-stereo -ar 16000 -acodec pcm_s16le -ac 1 -f wav - \
+| ~/lab/speechtotext/speechtotext -key $SPEECHTOTEXT_KEY \
+| tee $outfn
